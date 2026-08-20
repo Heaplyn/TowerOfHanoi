@@ -1,0 +1,38 @@
+# Visual Studio temporary files, caches, and build output
+.vs/
+[Bb]in/
+[Oo]bj/
+x64/
+x86/
+Debug/
+Release/
+
+# User-specific files
+*.vcxproj.user
+*.sqlproj.user
+*.publishsettings
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# C++ Build results
+*.exe
+*.dll
+*.lib
+*.pdb
+*.obj
+*.iobj
+*.ipdb
+*.log
+*.tlog
+*.lastbuildstate
+*.recipe
+*.ilk
+
+# IntelliSense and Browse Database
+*.ncb
+*.sdf
+*.opensdf
+*.opendb
+*.db
