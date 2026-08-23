@@ -35,6 +35,32 @@ int main()
 
 void SetupTowers() {
 	int towers = 0;
+	int Disks = 0;
+SetupDisks:
+	cout << "How many disks would you like to have? ";
+	cin >> Disks;
+	if (cin.fail()) {
+		cout << "Try again\n ";
+		Disks = 0;
+		//both do sweep of buffer and reset failbit
+		//if you dont reset failbit, itll keep failing recursively
+		//\n is needed cause it clears everything up till the enter line
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		//did this cause why not. hope youre happy professor :)
+		//besides i can see the elegance in this
+		goto SetupDisks;
+		return;
+	}
+	if (Disks == -1) {
+		QuitFlag = true;
+		return;
+	}
+	if (Disks < 1) {
+		cout << "You must have at least 1 disk. Setting to 1." << endl;
+		Disks = 1;
+	}
+
 SetupTowers:
 	
 	cout << "How many towers would you like to have? ";
@@ -61,7 +87,9 @@ SetupTowers:
 		cout << "You must have at least 3 towers. Setting to 3." << endl;
 		towers = 3;
 	}
-	for (int i = 0; i < towers; i++) {
+	tower NewTower(Disks);
+	Towers.push_back(NewTower);
+	for (int i = 0; i < towers - 1; i++) {
 		tower NewTower;
 		Towers.push_back(NewTower);
 	}

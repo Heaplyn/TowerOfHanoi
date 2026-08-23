@@ -53,9 +53,10 @@ char GetCharFromIndex(int index) {
 }
 
 string DetermineDiskName(int weight) {
+    
     int base = GetBaseSize();
     string name = "";
-    int temp = weight;
+    int temp = weight - 1;
     
     while (temp >= 0) {
         name = GetCharFromIndex(temp % base) + name;

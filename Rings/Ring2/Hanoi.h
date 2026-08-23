@@ -42,6 +42,6 @@ namespace Hanoi {
         void MoveDisk(disk Disk, tower& targetTower);
         void PrintTower(int towerNum);
         bool operator==(const tower& other) const;
-        tower();
+        tower(int Towers = 0);
     };
 }

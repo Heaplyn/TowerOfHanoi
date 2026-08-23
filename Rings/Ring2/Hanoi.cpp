@@ -18,7 +18,10 @@ bool disk::operator==(const disk& other) const {
     return ID == other.ID;
 }
 
-tower::tower() {
+tower::tower(int Towers) {
+	for (int i = 0; i < Towers; i++) {
+		Disks += disk(this);
+	}
     ID = GenerateRandomString();
 }
 
@@ -47,8 +50,6 @@ disk::disk(tower* parent) {
     TowerParent = parent;
     StartWeight++;
     Weight = StartWeight;
-    std::cout << "Disk created with weight: " << StartWeight << std::endl;
-    std::cout << "Disk real weight: " << Weight << std::endl;
     ID = GenerateRandomString();
     Name = DetermineDiskName(Weight);
 }
