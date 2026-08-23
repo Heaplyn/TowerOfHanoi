@@ -23,14 +23,15 @@ int main()
 {
 	cout << GenerateRandomString(50) << endl;
 	cout << "Welcome to the Tower of Hanoi program!" << endl;
-	while (!QuitFlag) {
+	//while (!QuitFlag) {
+	FlagLoop:
 		ClearTowers();
 		SetupTowers();
 		this_thread::sleep_for(chrono::milliseconds(400));
-	}
-	
+	//}
+	if (!QuitFlag) goto FlagLoop;
+	return 0;
 }
-
 
 void SetupTowers() {
 	int towers = 0;
@@ -41,11 +42,14 @@ SetupTowers:
 	
 	if (cin.fail()) {
 		cout << "Try again\n ";
-		towers = NULL;
+		towers = 0;
 		//both do sweep of buffer and reset failbit
+		//if you dont reset failbit, itll keep failing recursively
 		//\n is needed cause it clears everything up till the enter line
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		//did this cause why not. hope youre happy professor :)
+		//besides i can see the elegance in this
 		goto SetupTowers;
 		return;
 	}
@@ -61,11 +65,12 @@ SetupTowers:
 		tower NewTower;
 		Towers.push_back(NewTower);
 	}
+	PrintTowers();
 }
 
 void ClearTowers() {
 	Towers.clear();
-};
+}
 
 void PrintTowers() {
 	for (int i = 0; i < Towers.size(); i++) {

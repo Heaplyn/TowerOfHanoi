@@ -6,15 +6,10 @@ PascalCase for funcs and variables
 #pragma once
 #include <vector>
 #include <string>
-#include <map>
-#include <random>
 #include <iostream>
-#include <variant>
 
 #include "Rings/Ring0/StringUtil.h"
 #include "Rings/Ring1/IDManager.h"
-
-using namespace std;
 
 namespace Hanoi {
     extern int StartWeight;
@@ -27,16 +22,21 @@ namespace Hanoi {
         tower* TowerParent; // Pointer avoids circular reference & copy issues
         int Weight;
         string ID;
+        string Name;
+
     public:
-        string GetID();
+        string GetID() const;
+        string GetName() const;
         disk(tower* parent);
+        bool operator==(const disk& other) const;
     };
 
     class tower {
     private:
-        idManager Disks;
+        idManager<disk> Disks;
         void RemoveDisk(disk Disk);
         string ID;
+
     public:
         bool VerifyDisk(disk Disk);
         void MoveDisk(disk Disk, tower& targetTower);

@@ -1,6 +1,8 @@
+/*
+Heaplyn, 8/20/26
+Hanoi objects
+*/
 #include "Hanoi.h"
-
-
 
 using namespace Hanoi;
 
@@ -12,28 +14,33 @@ bool tower::operator==(const tower& other) const {
     return ID == other.ID;
 }
 
+bool disk::operator==(const disk& other) const {
+    return ID == other.ID;
+}
+
 tower::tower() {
     ID = GenerateRandomString();
 }
 
-
-
 void tower::MoveDisk(disk Disk, tower& targetTower) {
-    string DiskID = Disk.GetID();
-    Disks -= DiskID;
-    targetTower.Disks += DiskID;
+    Disks -= Disk;
+    targetTower.Disks += Disk;
 }
 
 void tower::PrintTower(int towerNum) {
-	std::cout << "Tower " << towerNum << " contains disks: ";
+    std::cout << "T" << towerNum << ": ";
     for (disk Disk : Disks) {
-        std::cout << Disk.GetID() << " ";
+        std::cout << Disk.GetName() << " ";
     }
-	std::cout << std::endl;
+    std::cout << std::endl;
 }
 
-string disk::GetID() {
-    return ID;
+string disk::GetName() const {
+    return (const string&)Name;
+}
+
+string disk::GetID() const {
+    return (const string&)ID;
 }
 
 disk::disk(tower* parent) {
@@ -43,6 +50,5 @@ disk::disk(tower* parent) {
     std::cout << "Disk created with weight: " << StartWeight << std::endl;
     std::cout << "Disk real weight: " << Weight << std::endl;
     ID = GenerateRandomString();
+    Name = DetermineDiskName(Weight);
 }
-
-
