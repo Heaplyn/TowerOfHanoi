@@ -1,5 +1,6 @@
 #include "Hanoi.h"
-#include <iostream>
+
+
 
 using namespace Hanoi;
 
@@ -12,12 +13,23 @@ bool tower::operator==(const tower& other) const {
 }
 
 tower::tower() {
-    // Constructor logic
+    ID = GenerateRandomString();
 }
+
+
 
 void tower::MoveDisk(disk Disk, tower& targetTower) {
     string DiskID = Disk.GetID();
     Disks -= DiskID;
+    targetTower.Disks += DiskID;
+}
+
+void tower::PrintTower(int towerNum) {
+	std::cout << "Tower " << towerNum << " contains disks: ";
+    for (disk Disk : Disks) {
+        std::cout << Disk.GetID() << " ";
+    }
+	std::cout << std::endl;
 }
 
 string disk::GetID() {
@@ -32,3 +44,5 @@ disk::disk(tower* parent) {
     std::cout << "Disk real weight: " << Weight << std::endl;
     ID = GenerateRandomString();
 }
+
+

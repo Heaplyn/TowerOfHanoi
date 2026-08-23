@@ -10,6 +10,16 @@ int FindVector(const vector<vectorType>& CurrentVector, const vectorType& Value)
     return -1;
 }
 
+Iterator& Iterator::operator++() {
+	if (holds_alternative<idVector::const_iterator>(ptr)) {
+		++get<idVector::const_iterator>(ptr);
+	}
+	else if (holds_alternative<idMap::const_iterator>(ptr)) {
+		++get<idMap::const_iterator>(ptr);
+	}
+	return *this;
+}
+
 void idManager::operator-=(const string ID) {
     if (holds_alternative<idMap>(Storage)) {
         get<idMap>(Storage).erase(ID);
@@ -21,6 +31,35 @@ void idManager::operator-=(const string ID) {
             NewStorage.erase(NewStorage.begin() + FoundIndex);
         }
     }
+}
+
+void idManager::operator+=(const string ID) {
+    if (holds_alternative<idMap>(Storage)) {
+        get<idMap>(Storage)[ID] = true;
+    }
+    else if (holds_alternative<idVector>(Storage)) {
+        idVector& NewStorage = get<idVector>(Storage);
+        int FoundIndex = FindVector<string>(NewStorage, ID);
+        if (FoundIndex != -1) {
+			return; // ID already exists, do nothing
+        }
+		NewStorage.push_back(ID);
+    }
+}
+
+/*For the beginning bookmark of the storage thing
+Think of an iterator like a page in a book. 
+you have its address and you can move to n amount of pages or wtv
+*/
+
+//Beginning iterator
+Iterator idManager::begin() {
+    return Iterator(get<idVector>(Storage).begin());
+}
+
+//Ending iterator
+Iterator idManager::end() {
+    return Iterator(get<idVector>(Storage).end());
 }
 
 idManager::idManager() : idManager(Map) {}
@@ -37,24 +76,18 @@ idManager::idManager(idType Type) {
 }
 
 string idManager::operator[](const string ID) {
+    //Basically is finding the ID in storage
+    //If statement is checking if Storage is a map or vector
     if (holds_alternative<idMap>(Storage)) {
-        auto& m = get<idMap>(Storage);
+        idMap& m = get<idMap>(Storage);
         if (m.count(ID)) return ID;
     }
     else if (holds_alternative<idVector>(Storage)) {
-        auto& v = get<idVector>(Storage);
-        for (const auto& s : v) {
+        idVector& v = get<idVector>(Storage);
+        for (const string& s : v) {
             if (s == ID) return s;
         }
     }
     return "";
 }
 
-void idManager::operator+=(const string ID) {
-    if (holds_alternative<idMap>(Storage)) {
-        get<idMap>(Storage)[ID] = true;
-    }
-    else if (holds_alternative<idVector>(Storage)) {
-        get<idVector>(Storage).push_back(ID);
-    }
-}

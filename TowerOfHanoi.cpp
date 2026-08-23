@@ -26,7 +26,7 @@ int main()
 	while (!QuitFlag) {
 		ClearTowers();
 		SetupTowers();
-		this_thread::sleep_for(chrono::seconds(1));
+		this_thread::sleep_for(chrono::milliseconds(400));
 	}
 	
 }

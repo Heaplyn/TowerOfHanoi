@@ -8,6 +8,8 @@ PascalCase for funcs and variables
 #include <string>
 #include <map>
 #include <random>
+#include <iostream>
+#include <variant>
 
 #include "Rings/Ring0/StringUtil.h"
 #include "Rings/Ring1/IDManager.h"
@@ -36,6 +38,7 @@ namespace Hanoi {
         void RemoveDisk(disk Disk);
         string ID;
     public:
+        bool VerifyDisk(disk Disk);
         void MoveDisk(disk Disk, tower& targetTower);
         void PrintTower(int towerNum);
         bool operator==(const tower& other) const;
