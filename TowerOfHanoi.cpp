@@ -9,15 +9,13 @@ Tower of Hanoi program that can have n disks and n pegs
 #include "Rings/Ring2/Hanoi.h"
 #include "Rings/Ring0/StringUtil.h"
 
-using namespace std;
 using namespace Hanoi;
 
-vector<tower> Towers;
 bool QuitFlag = false;
 
-void ClearTowers();
 void SetupTowers();
 void PrintTowers();
+void EnterMove();
 
 int main()
 {
@@ -31,6 +29,35 @@ int main()
 	//}
 	if (!QuitFlag) goto FlagLoop;
 	return 0;
+}
+
+void EnterMove() {
+	int sourceTower = 0;
+	int targetTower = 0;
+	TryEnter:
+		cout << "Enter the source tower number: ";
+		cin >> sourceTower;
+		cout << "Enter the target tower number: ";
+		cin >> targetTower;
+	if (sourceTower < 0 || sourceTower >= tower::Towers.size() ||
+		targetTower < 0 || targetTower >= tower::Towers.size()) {
+		cout << "Invalid tower numbers. Please try again." << endl;
+		goto TryEnter;
+		
+	}
+	tower& source = tower::Towers[sourceTower];
+	tower& target = tower::Towers[targetTower];
+	if (source.Disks.Size == 0) {
+		cout << "Source tower is empty. Please try again." << endl;
+		return;
+	}
+	disk topDisk = source.Disks[0];
+	if (!target.VerifyDisk(topDisk)) {
+		cout << "Cannot place disk on target tower. Please try again." << endl;
+		return;
+	}
+	source.MoveDisk(topDisk, target);
+	PrintTowers();
 }
 
 void SetupTowers() {
@@ -88,20 +115,21 @@ SetupTowers:
 		towers = 3;
 	}
 	tower NewTower(Disks);
-	Towers.push_back(NewTower);
+	tower::Towers.push_back(NewTower);
+	//Towers - 1 considering we already added one tower with all disks
 	for (int i = 0; i < towers - 1; i++) {
 		tower NewTower;
-		Towers.push_back(NewTower);
+		tower::Towers.push_back(NewTower);
 	}
+Round:
 	PrintTowers();
+	
 }
 
-void ClearTowers() {
-	Towers.clear();
-}
+
 
 void PrintTowers() {
-	for (int i = 0; i < Towers.size(); i++) {
-		Towers.at(i).PrintTower(i);
+	for (int i = 0; i < tower::Towers.size(); i++) {
+		tower::Towers.at(i).PrintTower(i);
 	}
 }

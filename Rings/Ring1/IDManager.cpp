@@ -1,3 +1,0 @@
-/* IDManager template implementation is fully header
-only in IDManager.h to respect Ring dependencies.
-*/

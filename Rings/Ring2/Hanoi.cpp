@@ -8,7 +8,18 @@ using namespace Hanoi;
 
 namespace Hanoi {
     int StartWeight = 0;
+	void ClearTowers() {
+		cout << "Clearing towers..." << endl;
+		StartWeight = 0;
+		for (tower& t : tower::Towers) {
+			t.ClearDisks();
+		}
+        tower::Towers.clear();
+        tower::Towers.shrink_to_fit();
+	}
 }
+
+vector<tower> tower::Towers = vector<tower>();
 
 bool tower::operator==(const tower& other) const {
     return ID == other.ID;
@@ -19,10 +30,17 @@ bool disk::operator==(const disk& other) const {
 }
 
 tower::tower(int Towers) {
-	for (int i = 0; i < Towers; i++) {
-		Disks += disk(this);
+	for (int i = Towers; i > 0; i--) {
+		Disks += disk(this,i);
 	}
     ID = GenerateRandomString();
+}
+
+bool tower::VerifyDisk(disk Disk) {
+	if (Disks[0].GetWeight() < Disk.GetWeight()) {
+		return false;
+	}
+	return true;
 }
 
 void tower::MoveDisk(disk Disk, tower& targetTower) {
@@ -30,10 +48,16 @@ void tower::MoveDisk(disk Disk, tower& targetTower) {
     targetTower.Disks += Disk;
 }
 
+void tower::ClearDisks() {
+	Disks.Clear();
+}
+
 void tower::PrintTower(int towerNum) {
     std::cout << "T" << towerNum << ": ";
+	int Index = 0;
     for (disk Disk : Disks) {
-        std::cout << Disk.GetName() << " ";
+        std::cout << Disk.GetName() << (Index < Disks.Size - 1 ? "==" : "");
+		Index++;
     }
     std::cout << std::endl;
 }
@@ -45,11 +69,20 @@ string disk::GetName() const {
 string disk::GetID() const {
     return (const string&)ID;
 }
+int disk::GetWeight() const {
+	return Weight;
+}
 
-disk::disk(tower* parent) {
+disk::disk(tower* parent, int NewWeight) {
     TowerParent = parent;
-    StartWeight++;
-    Weight = StartWeight;
+    switch (NewWeight) {
+	case -1:
+		Weight = StartWeight;
+		break;
+	default:
+		Weight = NewWeight;
+		break;
+    }
     ID = GenerateRandomString();
     Name = DetermineDiskName(Weight);
 }

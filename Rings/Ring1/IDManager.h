@@ -45,19 +45,27 @@ private:
 
 public:
     idManager() {}
+    int Size = 0;
 
     object operator[](const object ID) {
         //Basically is finding the ID in storage
         for (const object& s : Storage) {
             if (s == ID) return s;
         }
-        return object();
+        return nullptr;
+    }
+    object operator[](int ID) {
+		if (ID >= 0 && ID < Storage.size()) {
+			return Storage[ID];
+		}
+        return nullptr;
     }
 
     void operator+=(const object ID) {
         for (const object& s : Storage) {
             if (s == ID) return;
         }
+        Size++;
         Storage.push_back(ID);
     }
 
@@ -65,6 +73,7 @@ public:
        for (int Index = 0; Index != Storage.size(); Index++) {
             if (Storage[Index] == ID) {
                 Storage.erase(Storage.begin() + Index);
+                Size--;
                 return;
             }
         }
@@ -72,6 +81,11 @@ public:
 
     bool operator==(const idManager<object>& other) const {
         return Storage == other.Storage;
+    }
+
+    void Clear() {
+        Storage.clear();
+        Storage.shrink_to_fit();
     }
 
     /*For the beginning bookmark of the storage thing
