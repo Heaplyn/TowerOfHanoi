@@ -12,38 +12,79 @@ Tower of Hanoi program that can have n disks and n pegs
 using namespace Hanoi;
 
 bool QuitFlag = false;
+int TotalDisks = 0; // Track the total number of disks globally for the win condition
 
 void SetupTowers();
 void PrintTowers();
 void EnterMove();
+void ClearBuffer();
 
 int main()
 {
 	cout << GenerateRandomString(50) << endl;
 	cout << "Welcome to the Tower of Hanoi program!" << endl;
-	//while (!QuitFlag) {
+
+	ClearTowers();
+	SetupTowers();
+
 	FlagLoop:
-		ClearTowers();
-		SetupTowers();
+		EnterMove();
+		
+		// Win Condition: If all disks are stacked on the very last tower
+		if (tower::Towers.back().Disks.Size == TotalDisks) {
+			cout << "\nCONGRATULATIONS! You solved the puzzle!" << endl;
+			QuitFlag = true;
+		}
+
 		this_thread::sleep_for(chrono::milliseconds(400));
-	//}
 	if (!QuitFlag) goto FlagLoop;
 	return 0;
+}
+
+void ClearBuffer() {
+	//both do sweep of buffer and reset failbit
+	//if you dont reset failbit, itll keep failing recursively
+	//\n is needed cause it clears everything up till the enter line
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
 void EnterMove() {
 	int sourceTower = 0;
 	int targetTower = 0;
 	TryEnter:
-		cout << "Enter the source tower number: ";
+		cout << "Enter the source tower number (or -1 to quit): ";
 		cin >> sourceTower;
+		if (cin.fail()) {
+			cout << "Try again\n ";
+			sourceTower = 0;
+			targetTower = 0;
+			ClearBuffer();
+			//did this cause why not. hope youre happy professor :)
+			//besides i can see the elegance in this
+			goto TryEnter;
+			return;
+		}
+		if (sourceTower == -1) {
+			QuitFlag = true;
+			return;
+		}
 		cout << "Enter the target tower number: ";
 		cin >> targetTower;
+		if (cin.fail()) {
+			cout << "Try again\n ";
+			sourceTower = 0;
+			targetTower = 0;
+			ClearBuffer();
+			//did this cause why not. hope youre happy professor :)
+			//besides i can see the elegance in this
+			goto TryEnter;
+			return;
+		}
 	if (sourceTower < 0 || sourceTower >= tower::Towers.size() ||
 		targetTower < 0 || targetTower >= tower::Towers.size()) {
 		cout << "Invalid tower numbers. Please try again." << endl;
 		goto TryEnter;
-		
 	}
 	tower& source = tower::Towers[sourceTower];
 	tower& target = tower::Towers[targetTower];
@@ -51,7 +92,10 @@ void EnterMove() {
 		cout << "Source tower is empty. Please try again." << endl;
 		return;
 	}
-	disk topDisk = source.Disks[0];
+	
+	// Get the top disk of the source tower (which is at the end of the collection)
+	disk topDisk = source.Disks[source.Disks.Size - 1];
+	
 	if (!target.VerifyDisk(topDisk)) {
 		cout << "Cannot place disk on target tower. Please try again." << endl;
 		return;
@@ -69,13 +113,9 @@ SetupDisks:
 	if (cin.fail()) {
 		cout << "Try again\n ";
 		Disks = 0;
-		//both do sweep of buffer and reset failbit
-		//if you dont reset failbit, itll keep failing recursively
-		//\n is needed cause it clears everything up till the enter line
-		cin.clear();
-		cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		//did this cause why not. hope youre happy professor :)
-		//besides i can see the elegance in this
+		ClearBuffer();
+		//i love gotos :D
+		//pure assembly principles
 		goto SetupDisks;
 		return;
 	}
@@ -87,18 +127,15 @@ SetupDisks:
 		cout << "You must have at least 1 disk. Setting to 1." << endl;
 		Disks = 1;
 	}
+	TotalDisks = Disks; // Save the total disks for the win condition
 
 SetupTowers:
-	
 	cout << "How many towers would you like to have? ";
 	cin >> towers;
-	
 	if (cin.fail()) {
 		cout << "Try again\n ";
 		towers = 0;
-		//both do sweep of buffer and reset failbit
-		//if you dont reset failbit, itll keep failing recursively
-		//\n is needed cause it clears everything up till the enter line
+		
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		//did this cause why not. hope youre happy professor :)
@@ -123,10 +160,7 @@ SetupTowers:
 	}
 Round:
 	PrintTowers();
-	
 }
-
-
 
 void PrintTowers() {
 	for (int i = 0; i < tower::Towers.size(); i++) {

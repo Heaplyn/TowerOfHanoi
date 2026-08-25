@@ -52,13 +52,13 @@ public:
         for (const object& s : Storage) {
             if (s == ID) return s;
         }
-        return nullptr;
+        return object();
     }
     object operator[](int ID) {
 		if (ID >= 0 && ID < Storage.size()) {
 			return Storage[ID];
 		}
-        return nullptr;
+        return object();
     }
 
     void operator+=(const object ID) {

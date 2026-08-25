@@ -32,11 +32,11 @@ namespace Hanoi {
         string GetName() const;
 		int GetWeight() const;
         disk(tower* parent,int NewWeight = -1);
+        disk();
         bool operator==(const disk& other) const;
     };
 
     class tower {
-        
     private:
         void RemoveDisk(disk Disk);
         string ID;

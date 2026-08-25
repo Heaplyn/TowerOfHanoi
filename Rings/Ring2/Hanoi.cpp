@@ -37,7 +37,10 @@ tower::tower(int Towers) {
 }
 
 bool tower::VerifyDisk(disk Disk) {
-	if (Disks[0].GetWeight() < Disk.GetWeight()) {
+	if (Disks.Size == 0) {
+		return true;
+	}
+	if (Disks[Disks.Size - 1].GetWeight() < Disk.GetWeight()) {
 		return false;
 	}
 	return true;
@@ -85,4 +88,8 @@ disk::disk(tower* parent, int NewWeight) {
     }
     ID = GenerateRandomString();
     Name = DetermineDiskName(Weight);
+}
+
+disk::disk() : TowerParent(nullptr), Weight(-1), ID(""), Name("") {
+	
 }
